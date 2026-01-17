@@ -1,0 +1,112 @@
+:root {
+    --bg-color: #2c3e50;
+    --button-color: #ff4757;
+    --button-shadow: #c0392b;
+    --button-ring: #bdc3c7;
+    --text-color: #ffffff;
+    --housing-color: #34495e;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.button-wrapper {
+    position: relative;
+    padding: 20px;
+    background: var(--housing-color);
+    border-radius: 50%;
+    box-shadow: 
+        0 20px 50px rgba(0,0,0,0.5),
+        inset 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* The Ring */
+.button-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: var(--button-ring);
+    border-radius: 50%;
+    box-shadow: 
+        inset 0 5px 10px rgba(255,255,255,0.5),
+        0 5px 15px rgba(0,0,0,0.3);
+}
+
+.arcade-button {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border: none;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff6b81, var(--button-color));
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.1s cubic-bezier(0.4, 0.0, 0.2, 1), box-shadow 0.1s;
+    
+    /* 3D Depth */
+    box-shadow: 
+        0 15px 0 var(--button-shadow),
+        0 20px 20px rgba(0,0,0,0.4),
+        inset 0 5px 10px rgba(255,255,255,0.4);
+    
+    transform: translateY(0);
+    z-index: 10;
+}
+
+.arcade-button:active, .arcade-button.active {
+    transform: translateY(12px);
+    box-shadow: 
+        0 3px 0 var(--button-shadow),
+        0 5px 10px rgba(0,0,0,0.4),
+        inset 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.button-text {
+    display: block;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    user-select: none;
+}
+
+.footer {
+    padding: 20px;
+    opacity: 0.5;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 400px) {
+    .arcade-button {
+        width: 160px;
+        height: 160px;
+        font-size: 1.5rem;
+    }
+}

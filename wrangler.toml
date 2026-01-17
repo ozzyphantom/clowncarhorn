@@ -1,0 +1,6 @@
+name = "clowncarhorn"
+compatibility_date = "2024-04-03"
+assets = { directory = "./public" }
+
+# Minimal worker script if needed for custom logic, though assets binding handles most static needs
+main = "src/worker.js"
