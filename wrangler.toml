@@ -4,3 +4,9 @@ assets = { directory = "./public" }
 
 # Minimal worker script if needed for custom logic, though assets binding handles most static needs
 main = "src/worker.js"
+
+# Custom Domain Configuration
+routes = [
+	{ pattern = "clowncarhorn.com", custom_domain = true },
+	{ pattern = "www.clowncarhorn.com", custom_domain = true }
+]
