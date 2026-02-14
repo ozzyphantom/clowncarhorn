@@ -30,9 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playSample(buffer) {
         const source = audioCtx.createBufferSource();
         source.buffer = buffer;
-        const gain = audioCtx.createGain();
-        gain.gain.value = 1.0;
-        source.connect(gain).connect(audioCtx.destination);
+        source.connect(audioCtx.destination);
         source.start(0);
     }
 
@@ -206,9 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Interaction Handlers ---
 
-    button.addEventListener('mousedown', (e) => {
-        playRandomSound();
-    });
+    button.addEventListener('mousedown', () => playRandomSound());
 
     button.addEventListener('touchstart', (e) => {
         e.preventDefault();
