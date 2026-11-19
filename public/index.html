@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Clown Car Horn - HONK!</title>
     <meta name="description" content="A simple website to honk a clown horn.">
+    <meta name="theme-color" content="#2c3e50">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤡</text></svg>">
+    <link rel="modulepreload" href="sounds.js">
+    <script type="module" src="script.js"></script>
 </head>
 <body>
     <main class="container">
         <div class="button-wrapper">
-            <button id="honk-btn" class="arcade-button" aria-label="Honk Clown Horn">
+            <button id="honk-btn" class="arcade-button" type="button" aria-label="Honk Clown Horn" aria-keyshortcuts="Space Enter">
                 <span class="button-text">HONK</span>
             </button>
         </div>
@@ -23,6 +26,5 @@
             <a href="https://thismightnotmatter.com" rel="noopener noreferrer">blog</a>
         </p>
     </footer>
-    <script src="script.js"></script>
 </body>
 </html>
