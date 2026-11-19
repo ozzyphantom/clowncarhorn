@@ -1,0 +1,18 @@
+# Supply-chain hardening. Same settings as the other sites; see the Supply
+# chain section of ~/projects/standards/web-standards.md.
+minimumReleaseAge: 10080          # minutes (1 week) before a newly published version is installable
+blockExoticSubdeps: true          # transitive deps must come from the registry, not git/tarball URLs
+trustPolicy: no-downgrade         # refuse a version whose publisher provenance has degraded
+
+# Build/lifecycle scripts are blocked by default. Every package that ships one
+# is listed here with a reviewed decision. Never set dangerouslyAllowAllBuilds.
+#
+# Both scripts below were read on 2026-11-19. Each one checks that the platform
+# binary is present and, when it is missing, downloads it from the registry
+# outside the lockfile. pnpm already installs those binaries as optional
+# dependencies (@esbuild/*, @cloudflare/workerd-*), pinned and hashed in
+# pnpm-lock.yaml, so the scripts add nothing here. `wrangler dev` and
+# `wrangler deploy --dry-run` run without them.
+allowBuilds:
+  esbuild: false                  # wrangler's bundler
+  workerd: false                  # the Workers runtime behind `wrangler dev`
