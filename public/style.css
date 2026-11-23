@@ -1,12 +1,29 @@
 :root {
     --bg-color: #2c3e50;
-    --button-color: #ff4757;
-    --button-shadow: #c0392b;
-    --button-ring: #bdc3c7;
     --text-color: #ffffff;
-    --housing-color: #34495e;
-    /* 200px wherever it fits; smaller on short and narrow screens. */
-    --button-size: clamp(120px, 50vmin, 200px);
+
+    /* The button is a 100 mm dome push button, seen from the front and lit
+       from the upper left. --cap is the diameter of its red cap: as large as
+       the screen allows, up to life size. Every other measure derives from it. */
+    --cap: clamp(132px, min(60vw, 50vh), 280px);
+    --ring: calc(var(--cap) * 0.125);   /* width of the collar */
+    --gap: calc(var(--cap) * 0.035);    /* the well between collar and plunger */
+    --wall: calc(var(--cap) * 0.04);    /* height of the collar above the panel */
+    --rise: calc(var(--cap) * 0.07);    /* how far the cap stands proud of its seat */
+    --held: calc(var(--cap) * 0.022);   /* the same while it is held down */
+
+    --cap-lit: #ff4b3a;
+    --cap-red: #de1f15;
+    --cap-deep: #a00f0b;
+    --cap-dark: #650605;
+    --legend: #fff6f3;
+}
+
+/* dvh follows the mobile toolbar; vh above is the fallback. */
+@supports (height: 1dvh) {
+    :root {
+        --cap: clamp(132px, min(60vw, 50dvh), 280px);
+    }
 }
 
 * {
@@ -41,45 +58,89 @@ body {
     flex: 1;
 }
 
-.button-wrapper {
+/* ---------- The button ----------
+   Three parts, back to front:
+     .collar         the black ring fixed to the panel, and the well inside it
+     .arcade-button  the plunger: the press target, the focus ring, its side wall
+     .cap            the red dome that travels, with the legend and the lamp */
+
+.collar {
     position: relative;
-    padding: 20px;
-    background: var(--housing-color);
+    padding: calc(var(--ring) + var(--gap));
     border-radius: 50%;
+    background:
+        /* the red cap, mirrored in the collar's inner slope */
+        radial-gradient(circle closest-side, rgba(255, 50, 30, 0) 80.5%, rgba(255, 50, 30, 0.2) 82.5%, rgba(255, 50, 30, 0) 86.5%),
+        /* a rounded top: dark at both edges, lighter on the crown */
+        radial-gradient(circle closest-side, #000 80.8%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.7) 100%),
+        linear-gradient(140deg, #3d4045 0%, #1a1b1d 40%, #070708 100%);
     box-shadow:
-        0 20px 50px rgba(0,0,0,0.5),
-        inset 0 10px 20px rgba(0,0,0,0.2);
+        inset 0 1px 1px rgba(255, 255, 255, 0.3),
+        /* the front edge, where the top rolls over into the collar's side */
+        inset 0 -1px 0.5px rgba(255, 255, 255, 0.14),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.85),
+        /* the collar's own height, then where it meets the panel */
+        0 var(--wall) 0 #050506,
+        0 calc(var(--wall) + 1px) 2px rgba(0, 0, 0, 0.8),
+        /* its shadow on the panel, thrown down and to the right */
+        calc(var(--cap) * 0.03) calc(var(--cap) * 0.12) calc(var(--cap) * 0.12) rgba(0, 0, 0, 0.42),
+        0 0 calc(var(--cap) * 0.05) rgba(0, 0, 0, 0.3);
 }
 
-/* The Ring */
-.button-wrapper::before {
+/* The well. */
+.collar::before {
     content: '';
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    background: var(--button-ring);
+    top: var(--ring);
+    right: var(--ring);
+    bottom: var(--ring);
+    left: var(--ring);
     border-radius: 50%;
-    box-shadow:
-        inset 0 5px 10px rgba(255,255,255,0.5),
-        0 5px 15px rgba(0,0,0,0.3);
+    background: #020202;
+    box-shadow: inset 0 calc(var(--cap) * 0.02) calc(var(--cap) * 0.03) #000;
 }
 
+/* Light on the collar's crown: the lamp at about 11 o'clock, and a weak
+   bounce off the panel opposite it. The mask keeps both on the crown. */
+.collar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 285deg,
+        rgba(255, 255, 255, 0) 0deg,
+        rgba(255, 255, 255, 0.9) 38deg,
+        rgba(255, 255, 255, 0) 80deg,
+        rgba(255, 255, 255, 0) 150deg,
+        rgba(255, 255, 255, 0.16) 200deg,
+        rgba(255, 255, 255, 0) 250deg,
+        rgba(255, 255, 255, 0) 360deg);
+    -webkit-mask-image: radial-gradient(circle closest-side, transparent 86%, #000 89%, #000 90.5%, transparent 93.5%);
+    mask-image: radial-gradient(circle closest-side, transparent 86%, #000 89%, #000 90.5%, transparent 93.5%);
+    pointer-events: none;
+}
+
+/* The plunger. Its box is the seat the cap is pushed into, so the press
+   target and the focus ring stay put while the cap moves. */
 .arcade-button {
     position: relative;
-    width: var(--button-size);
-    height: var(--button-size);
-    border: none;
+    z-index: 1;
+    display: block;
+    width: var(--cap);
+    height: var(--cap);
+    border: 0;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ff6b81, var(--button-color));
-    color: white;
-    font-size: calc(var(--button-size) * 0.16);
-    font-weight: 900;
-    letter-spacing: 2px;
+    background: none;
+    -webkit-appearance: none;
+    appearance: none;
+    color: var(--legend);
+    font: 900 calc(var(--cap) * 0.17)/1 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.05em;
     cursor: pointer;
     outline: none;
-    transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, filter 0.1s ease-out;
 
     /* The button takes every touch as a press: no scroll, zoom or text
        selection starts on it. The rest of the page still zooms. */
@@ -87,40 +148,133 @@ body {
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
+}
 
-    /* 3D Depth */
+/* The plunger's side wall, a red cylinder. The raised cap leaves a crescent
+   of it in view at the bottom. Its shadow falls on the well and the collar. */
+.arcade-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 50%;
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.5) 100%),
+        linear-gradient(90deg, #3f0504 0%, #9c110c 20%, #c41912 36%, #8d0f0b 62%, #3a0504 100%);
+    box-shadow: calc(var(--cap) * 0.012) calc(var(--cap) * 0.03) calc(var(--cap) * 0.03) rgba(0, 0, 0, 0.6);
+    transition: box-shadow 0.16s ease-out;
+}
+
+/* The cap: translucent red plastic. Light enters at the upper left and
+   leaves as a glow at the lower right. */
+.cap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* letter-spacing trails the last letter; this centres the legend again */
+    padding-left: 0.05em;
+    overflow: hidden;
+    border-radius: 50%;
+    background:
+        radial-gradient(ellipse 58% 40% at 62% 86%, rgba(255, 96, 70, 0.5) 0%, rgba(255, 80, 56, 0.16) 50%, rgba(255, 70, 50, 0) 76%),
+        radial-gradient(circle at 37% 29%, var(--cap-lit) 0%, #ee2a1f 22%, var(--cap-red) 46%, var(--cap-deep) 76%, var(--cap-dark) 100%);
     box-shadow:
-        0 15px 0 var(--button-shadow),
-        0 20px 20px rgba(0,0,0,0.4),
-        inset 0 5px 10px rgba(255,255,255,0.4);
+        inset calc(var(--cap) * 0.012) calc(var(--cap) * 0.016) calc(var(--cap) * 0.022) rgba(255, 205, 195, 0.5),
+        inset 0 calc(var(--cap) * -0.03) calc(var(--cap) * 0.06) rgba(60, 0, 0, 0.5),
+        0 1px 1px rgba(30, 0, 0, 0.75);
+    /* the legend is pressed into the plastic */
+    text-shadow:
+        -0.02em -0.03em 0.02em rgba(110, 0, 0, 0.6),
+        0.015em 0.025em 0.01em rgba(255, 170, 160, 0.35);
+    transform: translateY(calc(var(--rise) * -1));
+    /* its own layer, so a press moves a picture and repaints nothing */
+    will-change: transform;
+    /* the spring: a quick return with a little overshoot */
+    transition: transform 0.16s cubic-bezier(0.3, 1.5, 0.6, 1), box-shadow 0.16s ease-out, filter 0.16s ease-out;
+}
 
-    z-index: 10;
+/* The lamp's reflection: a soft patch and a hard glint inside it. */
+.cap::before {
+    content: '';
+    position: absolute;
+    top: 4%;
+    left: 8%;
+    width: 60%;
+    height: 38%;
+    background:
+        radial-gradient(ellipse 27% 13% at 40% 34%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.93) 58%, rgba(255, 255, 255, 0.4) 82%, rgba(255, 255, 255, 0) 100%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.18) 55%, rgba(255, 255, 255, 0) 100%);
+    transform: rotate(-32deg);
+}
+
+/* The lamp inside the cap. It is on while the button is held. */
+.cap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 56%, rgba(255, 170, 110, 0.55) 0%, rgba(255, 90, 50, 0.4) 36%, rgba(255, 60, 30, 0) 70%);
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
 }
 
 @media (hover: hover) {
-    .arcade-button:hover {
-        filter: brightness(1.08);
+    .arcade-button:hover .cap {
+        filter: brightness(1.06);
     }
 }
 
-/* The ring sits outside the housing, where white reads against the background. */
+/* The ring sits outside the collar, where white reads against the panel. */
 .arcade-button:focus-visible {
     outline: 4px solid var(--text-color);
-    outline-offset: 26px;
+    outline-offset: calc(var(--ring) + var(--gap) + var(--wall) + 6px);
 }
 
-.arcade-button:active, .arcade-button.active {
-    transform: translateY(12px);
+/* Held down: the cap sinks into its seat, fast, and the lamp comes on. */
+.arcade-button:active .cap,
+.arcade-button.active .cap {
+    transform: translateY(calc(var(--held) * -1)) scale(0.985);
     box-shadow:
-        0 3px 0 var(--button-shadow),
-        0 5px 10px rgba(0,0,0,0.4),
-        inset 0 5px 20px rgba(0,0,0,0.3);
+        inset calc(var(--cap) * 0.012) calc(var(--cap) * 0.016) calc(var(--cap) * 0.022) rgba(255, 205, 195, 0.5),
+        inset 0 calc(var(--cap) * -0.03) calc(var(--cap) * 0.06) rgba(60, 0, 0, 0.5),
+        0 1px 1px rgba(30, 0, 0, 0.75),
+        0 0 calc(var(--cap) * 0.12) rgba(255, 60, 30, 0.45);
+    transition-duration: 0.05s;
+    transition-timing-function: ease-out;
 }
 
-.button-text {
-    display: block;
-    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+.arcade-button:active .cap::after,
+.arcade-button.active .cap::after {
+    opacity: 1;
+    transition-duration: 0.05s;
 }
+
+.arcade-button:active::before,
+.arcade-button.active::before {
+    box-shadow: calc(var(--cap) * 0.005) calc(var(--cap) * 0.01) calc(var(--cap) * 0.014) rgba(0, 0, 0, 0.6);
+    transition-duration: 0.05s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cap,
+    .cap::after,
+    .arcade-button::before {
+        transition: none;
+    }
+}
+
+/* ---------- The footer ---------- */
 
 .footer {
     padding: 14px 20px;

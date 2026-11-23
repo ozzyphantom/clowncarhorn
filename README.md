@@ -37,6 +37,21 @@ Use `run`. A bare `pnpm deploy` is a different pnpm command.
 | `tools/measure.js` | Loudness check for the horns. Not deployed |
 | `pnpm-workspace.yaml` | Supply-chain settings for the one dependency, wrangler |
 
+## The button
+
+`public/style.css` draws the button as a 100 mm dome push button, seen from the front and lit from the upper left. It uses no images.
+
+| Part | Selector | What it is |
+|------|----------|------------|
+| Collar | `.collar` | The black ring fixed to the panel, and the well inside it |
+| Plunger | `.arcade-button` | The `<button>`: the press target, the focus ring and the plunger's side wall |
+| Cap | `.cap` | The red dome that travels, with the legend, the highlight and the lamp |
+
+- Every measure derives from `--cap`, the diameter of the cap. It grows with the screen up to 280 px, about life size on a desktop screen.
+- While the button is held, the cap sinks into its seat and the lamp inside it comes on.
+- The press target stays put while the cap moves. The collar is not part of it.
+- The colours and measures are the custom properties at the top of the file.
+
 ## What a press does
 
 - A press honks once: mouse, touch, pen, Space or Enter. Each finger counts, so two-finger drumming works.
