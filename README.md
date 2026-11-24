@@ -23,6 +23,14 @@ corepack pnpm run deploy
 
 Use `run`. A bare `pnpm deploy` is a different pnpm command.
 
+## HTTPS
+
+The site is HTTPS only.
+
+- `public/_headers` sends `Strict-Transport-Security` with every file. A browser that has seen it uses HTTPS for a year, on every subdomain of clowncarhorn.com.
+- `_headers` does not reach the 404, which `src/worker.js` builds. The Worker sets the same header itself. Keep the two values in step.
+- The redirect from `http://` is not in this repository. It is the Always Use HTTPS switch on the clowncarhorn.com zone, in the Cloudflare dashboard under SSL/TLS, Edge Certificates.
+
 ## Files
 
 | Path | What it is |
